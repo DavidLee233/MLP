@@ -12,6 +12,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from torchvision.datasets import mnist
 
+
+
 # 第一步 数据集加载
 # 1.定义加载数据集函数
 def load_data_fashion_mnist(batch_size):
@@ -30,6 +32,7 @@ print('训练集长度为：', len(train_dataset), '测试集长度为：', len(
 batch_size = 256
 train_iter, test_iter = load_data_fashion_mnist(batch_size)
 batch_size_for_vision = 20
+
 # 3.训练集可视化
 train_loader = DataLoader(train_dataset, batch_size=batch_size_for_vision, shuffle=True)
 classes = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
@@ -44,6 +47,7 @@ for idx in np.arange(batch_size_for_vision):
     ax.imshow(np.squeeze(images[idx]))
     ax.set_title(classes[labels[idx]])
 plt.show()
+
 # 4.更详细地查看图像
 # select an image by index
 idx = 3
@@ -93,21 +97,28 @@ def convert_to_img(train=True):
 convert_to_img(True)  # 转换训练集
 convert_to_img(False)  # 转换测试集
 
+
+
 # 第二步 定义网络模型、网络参数、损失函数以及优化器
 # 1.实现单隐藏层的多层感知机，其中有256个隐藏单元
 net = nn.Sequential(nn.Flatten(),
                     nn.Linear(784, 256),
                     nn.ReLU(),
                     nn.Linear(256, 10))
+
 # 2.初始化线性层的网络参数
 def init_weights(m):
     if type(m) == nn.Linear:
         nn.init.normal_(m.weight, std=0.01)
 net.apply(init_weights)
+
 # 3.损失函数
 loss_function = nn.CrossEntropyLoss()
+
 # 4.优化器
 optimizer = torch.optim.SGD(net.parameters(), lr=0.01)
+
+
 
 
 
@@ -130,6 +141,8 @@ for epoch in range(num_epochs):
         if batch_idx % 10 == 0:
             print(epoch, batch_idx, loss.item())
 
+            
+            
 # 第四步：评估模型（损失和测试集准确率）
 # 1.绘制损失曲线
 plt.figure(figsize=(16, 8))
@@ -139,6 +152,7 @@ plt.legend(loc="best")
 df = pd.DataFrame(train_loss, columns=['loss'])
 # df.plot(figsize=(16,8), alpha=0.1, marker='.', grid=True)
 plt.show()
+
 # 2.测试集准确率计算
 total_correct = 0
 for batch_idx, (x, y) in enumerate(test_iter):
